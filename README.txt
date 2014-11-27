@@ -11,8 +11,6 @@ https://github.com/marbach/gpdream/wiki/
 Join our community: featuring your tool on GP-DREAM is easy and enhances its usability, visibility and impact.
 https://github.com/marbach/gpdream/wiki/Contact
 
-test
-
 --
 Daniel Marbach
 2014-11-27
