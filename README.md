@@ -4,19 +4,8 @@ as other methods contributed by the community. The GP-DREAM server is powered by
 [**GenePattern**](http://www.broadinstitute.org/cancer/software/genepattern/). Tools can also be used as standalone command-line 
 applications.
 
-* **Give it a go**: [**GP-DREAM login**](http://dream.broadinstitute.org/gp/pages/login.jsf)
-* **Learn more**: Documentation and benchmark results are on the [Wiki](https://github.com/marbach/gpdream/wiki/Home)
-* **Get involved**: [**Share your tool**](Share your tool) to enhance its usability and impact
-
-## News
-
-* **Migration to GitHub is ongoing, please be patient...**  
-* **2014-11-27: 500+ registered users, migration to GitHub**  
-  GP-DREAM passed the mark of 500 registered users this month, we celebrate the occasion by migrating all code and documentation to GitHub.
-
-## License
-
-Specified for each module on the [Wiki](https://github.com/marbach/gpdream/wiki/License)
+* **[See the Wiki for full documentation](https://github.com/marbach/gpdream/wiki)**
+* **Give it a go: [dream.broadinstitute.org](http://dream.broadinstitute.org)**
 
 ## Support
 
