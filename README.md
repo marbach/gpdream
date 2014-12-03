@@ -4,8 +4,8 @@ as other methods contributed by the community. The GP-DREAM server is powered by
 [**GenePattern**](http://www.broadinstitute.org/cancer/software/genepattern/). Tools can also be used as standalone command-line 
 applications.
 
-* **Learn more on [the project wiki](https://github.com/marbach/gpdream/wiki)**
-* **Give it a go at [dream.broadinstitute.org](http://dream.broadinstitute.org)**
+* **Learn more: [project wiki](https://github.com/marbach/gpdream/wiki)**
+* **Give it a go: [dream.broadinstitute.org](http://dream.broadinstitute.org)**
 
 ### Support
 
