@@ -56,6 +56,7 @@ class MetaLearner
 	int getPredictionError_CrossValid(int);
 	int setRandom(bool);
 	int readModuleMembership(const char*);
+	int setDefaultModuleMembership();
 	private:
 		
 	double getInitPLLScore();

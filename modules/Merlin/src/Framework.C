@@ -63,33 +63,31 @@ Framework::init(int argc, char** argv)
 	bool wDefault = true;
 	bool clusterDefault=true;
 	bool regDefault=true;
+	int optret='-';
+	opterr=1;
+	int oldoptind=optind;
  
-	while (1)
+	while(optret=getopt(argc,argv,"o:k:d:v:l:p:r:c:h:f:")!=-1)
 	{
-		static struct option long_options[] =
-			{
-				{"data", required_argument, 0, 'm'},
-                                {"reg",  required_argument, 0, 'l'},
-                                {"cut",  required_argument, 0, 'z'},
-                                {0, 0, 0, 0}
-			};
-
-		/* getopt_long stores the option index here. */
-                int option_index = 0;
-
-                c = getopt_long (argc, argv, "m:k:d:u:l:p:q:r:s:t:c:h:f:z:o:w:v:", long_options, &option_index);
-
-                /* Detect the end of the options. */
-                if (c == -1)
-                        break;
-
+		if(optret=='?')
+		{
+			cout <<"Option error " << optopt << endl;
+			return Error::UNKNOWN;
+		}
+		char c;
+		char* my_optarg=NULL;
+		c=*(argv[oldoptind]+1);
+		if(optind-oldoptind ==2)
+		{
+			my_optarg=argv[oldoptind+1];	
+		}
+		else
+		{
+			my_optarg=argv[oldoptind]+2;
+		}
 		switch(c)
 		{
-			case 'z': // --cut
-			{
-				break;
-			}
-			case 'm':
+			case 'd':
 			{
 				/*
 				// check extension - should be .tsv
@@ -150,19 +148,6 @@ Framework::init(int argc, char** argv)
 				kDefault=false;
 				break;
 			}
-			case 'd':
-			{
-				double convThreshold = atof(optarg);
-				metaLearner.setConvergenceThreshold(convThreshold);
-				break;
-			}
-			case 'u':
-			{
-				double lambda = atof(optarg);
-				cout << "Set Lambda" << lambda << endl;
-				metaLearner.setLambda(lambda);
-				break;
-			}
 			case 'v':
 			{
 				cvDefault=false;
@@ -186,25 +171,10 @@ Framework::init(int argc, char** argv)
 				metaLearner.setBeta1(atof(optarg));
 				break;
 			}
-			case 'q':
-			{
-				metaLearner.setBeta_ChIP(atof(optarg));
-				break;
-			}
 			case 'r':
 			{
 				rDefault=false;
 				metaLearner.setBeta_Motif(atof(optarg));
-				break;
-			}
-			case 's':
-			{
-				metaLearner.setChIPGraph(optarg);
-				break;
-			}
-			case 't':
-			{
-				metaLearner.setMotifGraph(optarg);
 				break;
 			}
 			case 'c':
@@ -236,16 +206,12 @@ Framework::init(int argc, char** argv)
 				return Error::UNKNOWN;
 			}
 		}
+		oldoptind=optind;
 	}
 
-	if(clusterDefault)
-	{
-		cerr << "Please specify initial clustering assingment. (option -c)\n";
-		return Error::UNKNOWN;
-	}
 	if(regDefault)
 	{
-		cerr << "Please input a file of regulators. (option --reg)\n";
+		cerr << "Please input a file of regulators. (option -l)\n";
 		return Error::UNKNOWN;
 	}
 	if(oDefault)
@@ -260,6 +226,11 @@ Framework::init(int argc, char** argv)
 		sprintf(moduleFName,"%s_MERLIN_modules.txt", outFilePrefix);
 		metaLearner.setOutputModuleName(moduleFName);
 	}*/
+	if(clusterDefault)
+	{
+		cout << "Setting to default clustering" << endl;
+		metaLearner.setDefaultModuleMembership();
+	}
 	if(cvDefault)
 	{
 		cvCnt=1;	
@@ -301,18 +272,15 @@ main(int argc, char* argv[])
 	if(argc<2)
 	{
 		cout <<"factorGraphInf " <<  endl
-			<<"--data gene_expression_file" << endl
-			<< "-k maxfactorsize " << endl
-			 << "-u lambda" << endl
-			 << "-t convergence_threshold" << endl
-			 << "-v cross_validation_cnt" << endl
-			 << "--reg restrictedfname" << endl
-			 << "-p beta1" << endl
-			 << "-q beta_chip" << endl
-			 << "-r beta_motif" << endl
-			 << "-s chipgraph" << endl
-			 << "-t motifgraph" << endl
-			<< "-c genelist"<< endl
+			<<"-d gene_expression_file " << endl
+			<< "-k maxfactorsize (default size_of_dataset)" << endl
+			 << "-v cross_validation_cnt (default 1)" << endl
+			 << "-l restricted_regulator_fname" << endl
+			 << "-p sparsity_prior (default -5)" << endl
+			 << "-r module_prior (default 4)" << endl
+			 << "-o outputdirectory" << endl
+			<< "-c clusterassignment (default random_partitioning) "<< endl
+			<< "-h hierarchical_clustering_threshold (default 0.6)"<< endl
 			<< "-f specificfold_torun (default is -1)" << endl ;
 		return 0;
 	}

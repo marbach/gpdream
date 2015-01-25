@@ -314,6 +314,77 @@ MetaLearner::readModuleMembership(const char* aFName)
 	return 0;
 }
 
+int
+MetaLearner::setDefaultModuleMembership()
+{
+	VSET& varSet=varManager->getVariableSet();
+	int vCnt=varSet.size();
+	int moduleCnt=(int) sqrt(vCnt/2);
+	if(moduleCnt>30)
+	{
+		moduleCnt=30;
+	}
+	map<int,int> matIdvIdMap;
+	int mID=0;
+	for(VSET_ITER vIter=varSet.begin();vIter!=varSet.end();vIter++)
+	{
+		matIdvIdMap[mID]=vIter->first;
+		mID++;
+	}
+	gsl_rng* r=gsl_rng_alloc(gsl_rng_default);
+	//Randomly partition the variables into clusterassignments
+	vector<int> randIndex;
+	double step=1.0/(double)vCnt;
+	map<int,int> usedInit;
+	int maxind=0;
+	for(int i=0;i<vCnt;i++)
+	{
+		double rVal=gsl_ran_flat(r,0,1);
+		int rind=(int)(rVal/step);
+		while(usedInit.find(rind)!=usedInit.end())
+		{
+			rVal=gsl_ran_flat(r,0,1);
+			rind=(int)(rVal/step);
+			if(rind>maxind)
+			{
+				maxind=rind;
+			}
+		}
+		if(matIdvIdMap.find(rind)==matIdvIdMap.end())
+		{
+			cout <<"Did not find " << rind << " matrixidmap " << endl;
+		}
+		int dataind=matIdvIdMap[rind];
+		usedInit[rind]=0;
+		randIndex.push_back(dataind);
+	}
+	//For each partition estimate the mean and covariance
+	int clusterSize=vCnt/moduleCnt;
+	for(int e=0;e<moduleCnt;e++)
+	{
+		int startInd=e*clusterSize;
+		int endInd=(e+1)*clusterSize;
+		if(e==moduleCnt-1)
+		{
+			endInd=clusterSize;
+		}
+		map<string,int>* geneSet=NULL;
+		geneSet=new map<string,int>;
+		moduleGeneSet[e]=geneSet;
+		for(int i=startInd;i<endInd;i++)
+		{
+			int dataId=randIndex[i];
+			Variable* v=varSet[dataId];
+			(*geneSet)[v->getName()]=0;
+			geneModuleID[v->getName()]=e;
+		}
+	}
+	randIndex.clear();
+	matIdvIdMap.clear();
+	usedInit.clear();
+	return 0;
+}
+
 int 
 MetaLearner::setNoPrune(bool pruneStatus)
 {
@@ -2346,7 +2417,7 @@ MetaLearner::attemptMove(MetaMove* move,map<int,INTINTMAP*>& affectedVars)
 	}
 	else
 	{	
-		cout <<"Updating regulator " << u->getName() <<" to module " << mID << endl;
+		//cout <<"Updating regulator " << u->getName() <<" to module " << mID << endl;
 		(*currIndegree)[u->getName()]=(*currIndegree)[u->getName()]+1;
 	}
 	if(regulatorModuleOutdegree.find(u->getName())==regulatorModuleOutdegree.end())

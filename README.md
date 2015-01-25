@@ -5,6 +5,7 @@ as other methods contributed by the community. The GP-DREAM server is powered by
 applications.
 
 * **Learn more: [project wiki](https://github.com/marbach/gpdream/wiki)**
+
 * **Give it a go: [dream.broadinstitute.org](http://dream.broadinstitute.org)**
 
 ### Support
